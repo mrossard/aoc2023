@@ -12,18 +12,12 @@ $cards = array_map(
 );
 
 $matches = array_map(
-    fn($card) => array_reduce(
-        $card['yours'],
-        function ($carry, $number) use ($card) {
-            return in_array($number, $card['winning'], true) ? [...$carry, $number] : $carry;
-        },
-        []
-    ),
+    static fn($card) => array_intersect($card['winning'], $card['yours']),
     $cards
 );
 
 echo 'part 1 : ', array_reduce($matches,
-    function ($carry, $card) {
+    static function ($carry, $card) {
         if (count($card) === 0) {
             return $carry;
         }
@@ -34,7 +28,7 @@ echo 'part 1 : ', array_reduce($matches,
 
 $countCopies = array_reduce(
     array_keys($matches),
-    function ($carry, $cardId) use ($matches) {
+    static function ($carry, $cardId) use ($matches) {
         $matchCount = count($matches[$cardId]);
         for ($times = 0; $times < $carry[$cardId]; $times++) {
             for ($i = 1; $i <= $matchCount; $i++) {
