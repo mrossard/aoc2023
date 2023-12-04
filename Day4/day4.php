@@ -37,7 +37,7 @@ $countCopies = array_reduce(
         }
         return $carry;
     },
-    array_map(static fn($card) => 1, $matches)
+    array_fill(0, count($cards), 1)
 );
 
 echo 'part 2 : ', array_sum($countCopies), PHP_EOL;
