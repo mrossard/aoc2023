@@ -30,12 +30,14 @@ function getHandStrength(string $hand, bool $withJokers = false): int
         unset($frequencies['J']);
     }
     $nonJokers = 5 - $jokersCount;
+    $max = max($frequencies);
 
     //5 of a kind
-    if (max($frequencies) + $jokersCount == 5) {
+    if ($max + $jokersCount == 5) {
         return 7;
     }
-    if (max($frequencies) + $jokersCount == 4) {
+    //4 of a kind
+    if ($max + $jokersCount == 4) {
         return 6;
     }
     //full house
@@ -43,7 +45,7 @@ function getHandStrength(string $hand, bool $withJokers = false): int
         return 5;
     }
     //3 of a kind
-    if (max($frequencies) >= $nonJokers - 2) {
+    if ($max >= $nonJokers - 2) {
         return 4;
     }
     //2 pairs - max 1 joker!
