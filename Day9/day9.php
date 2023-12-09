@@ -1,7 +1,7 @@
 <?php
 
 $histories = array_map(
-    fn($line) => array_map(intval(...), explode(' ', $line)),
+    static fn($line) => array_map(intval(...), explode(' ', $line)),
     file($argv[1], FILE_IGNORE_NEW_LINES)
 );
 
@@ -40,6 +40,6 @@ function extrapolate(array $histories)
     return $histories;
 }
 
-echo 'part 1 : ', array_sum(array_map(static fn($history) => $history[array_key_last($history)], extrapolate($histories))), PHP_EOL;
+echo 'part 1 : ', array_sum(array_map(static fn($history) => end($history), extrapolate($histories))), PHP_EOL;
 $histories = array_map(array_reverse(...), $histories);
-echo 'part 2 : ', array_sum(array_map(static fn($history) => $history[array_key_last($history)], extrapolate($histories))), PHP_EOL;
+echo 'part 2 : ', array_sum(array_map(static fn($history) => end($history), extrapolate($histories))), PHP_EOL;
