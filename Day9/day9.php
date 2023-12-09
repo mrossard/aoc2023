@@ -1,7 +1,7 @@
 <?php
 
 $histories = array_map(
-    fn($line) => $vals = array_map(intval(...), explode(' ', $line)),
+    fn($line) => array_map(intval(...), explode(' ', $line)),
     file($argv[1], FILE_IGNORE_NEW_LINES)
 );
 
@@ -16,13 +16,13 @@ function printHistory($rows)
     echo PHP_EOL;
 }
 
-function extrapolate(array $histories, $next = true)
+function extrapolate(array $histories)
 {
     foreach ($histories as $id => $history) {
         $currentRow = 1;
         $rows = [0 => $history];
         //drill down
-        while (!empty(array_filter($rows[$currentRow - 1], fn($item) => $item !== 0))) {
+        while (!empty(array_filter($rows[$currentRow - 1], static fn($item) => $item !== 0))) {
             for ($i = 1, $iMax = count($rows[$currentRow - 1]); $i < $iMax; $i++) {
                 $difference = $rows[$currentRow - 1][$i] - $rows[$currentRow - 1][$i - 1];
                 $rows[$currentRow][] = $difference;
@@ -36,11 +36,10 @@ function extrapolate(array $histories, $next = true)
             $rows[$j][] = $rows[$j][$last] + $rows[$j + 1][$last];
         }
         $histories[$id][] = $rows[0][$last + 1];
-        //printHistory($rows);
     }
     return $histories;
 }
 
-echo 'part 1 : ', array_sum(array_map(fn($history) => $history[array_key_last($history)], extrapolate($histories))), PHP_EOL;
+echo 'part 1 : ', array_sum(array_map(static fn($history) => $history[array_key_last($history)], extrapolate($histories))), PHP_EOL;
 $histories = array_map(array_reverse(...), $histories);
-echo 'part 2 : ', array_sum(array_map(fn($history) => $history[array_key_last($history)], extrapolate($histories, false))), PHP_EOL;
+echo 'part 2 : ', array_sum(array_map(static fn($history) => $history[array_key_last($history)], extrapolate($histories))), PHP_EOL;
